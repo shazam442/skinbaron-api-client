@@ -1,3 +1,5 @@
+# lib/skinbaron_api_client.rb
+
 # frozen_string_literal: true
 
 require_relative "lib/skinbaron_api_client/version"
@@ -8,7 +10,9 @@ Gem::Specification.new do |spec|
   spec.authors = ["Sam Schams"]
   spec.email = ["TODO: Write your email address"]
 
-  spec.summary = "TODO: Write a short summary, because RubyGems requires one."
+  spec.summary = "A lightweight ruby client for interacting with the SkinBaron API. " \
+                 "Simplifying the access to item and market data."
+
   spec.description = "TODO: Write a longer description or delete this line."
   spec.homepage = "TODO: Put your gem's website or public repo URL here."
   spec.license = "MIT"
@@ -33,8 +37,7 @@ Gem::Specification.new do |spec|
   spec.executables = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  # Uncomment to register a new dependency of your gem
-  spec.add_dependency "http", "~> 5.2"
+  spec.add_runtime_dependency "http", "~> 5.2"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

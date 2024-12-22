@@ -9,5 +9,6 @@ require_relative "skinbaron_api_client/client"
 
 module SkinbaronApiClient
   class Error < StandardError; end
-  # Your code goes here...
+
+  class AuthenticationError < Error; end
 end

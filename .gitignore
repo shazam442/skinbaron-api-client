@@ -7,3 +7,5 @@
 /spec/reports/
 /tmp/
 .env
+dev_script.rb
+.byebug_history

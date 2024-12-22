@@ -2,9 +2,9 @@
 
 # frozen_string_literal: true
 
-module SkinbaronApiClient
-  class Error < StandardError; end
+require_relative "error_handler"
 
+module SkinbaronApiClient
   # Example usage:
   #   skinbaron = SkinbaronApiClient::Client.new(api_key: "your_api_key", appid: 730) # 730 -> Counter Strike 2
   #   response = skinbaron.search(item: "AK-47 | Redline")
@@ -19,7 +19,7 @@ module SkinbaronApiClient
   # - base_body: Returns the base request body with the API key and app ID.
   # - base_headers: Returns the base request headers.
   class Client
-    BASE_URL = "https://api.skinbaron.de/"
+    BASE_URL = "https://api.skinbaron.de"
 
     def initialize(api_key:, appid: 730)
       @api_key = api_key
@@ -27,22 +27,26 @@ module SkinbaronApiClient
     end
 
     def search(item:)
-      url = "#{BASE_URL}Search"
+      body = { "search_item": item }
 
-      request_body = base_body.merge({ "search_item": item })
-      request_headers = base_headers
-
-      response = HTTP.headers(request_headers)
-                     .post(url, json: request_body)
-
+      response = post(endpoint: "Search", body: body)
       JSON.parse(response.body.to_s)
-    rescue HTTP::Error => e
-      raise Error, "HTTP request failed: #{e.message}"
-    rescue JSON::ParserError => e
-      raise Error, "Failed to parse JSON response: #{e.message}"
     end
 
     private
+
+    def post(endpoint:, headers: {}, body: {})
+      request_url = "#{BASE_URL}/#{endpoint}"
+      request_headers = base_headers.merge(headers)
+      request_body = base_body.merge(body)
+
+      response = HTTP.headers(request_headers).post(request_url, json: request_body)
+      ErrorHandler.check_response(response)
+
+      response
+    rescue StandardError => e
+      ErrorHandler.print_error(e, response || nil)
+    end
 
     def base_body
       {

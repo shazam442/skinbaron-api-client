@@ -1,38 +1,129 @@
-# SkinbaronApiClient
+# SkinBaron API Client
 
-TODO: Delete this and the text below, and describe your gem
+A Ruby gem for interacting with the SkinBaron API. This client provides a simple and intuitive way to access SkinBaron's marketplace functionality for CS2 (Counter-Strike 2) items.
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/skinbaron_api_client`. To experiment with that code, run `bin/console` for an interactive prompt.
+## Quick Start
+
+Install the gem from the command line:
+
+```bash
+gem install skinbaron_api_client
+```
+
+Then in your Ruby code:
+
+```ruby
+require 'skinbaron_api_client'
+
+skinbaron = SkinbaronApiClient::Client.new(api_key: "YOUR_API_KEY")
+results = skinbaron.search(item: "AK-47 | Redline")
+
+puts results
+```
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+Add this line to your application's Gemfile:
 
-Install the gem and add to the application's Gemfile by executing:
-
-```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+```ruby
+gem 'skinbaron_api_client'
 ```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+And then execute:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle install
+```
+
+Or install it yourself as:
+
+```bash
+gem install skinbaron_api_client
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+First, require the gem:
+
+```ruby
+require 'skinbaron_api_client'
+```
+
+Initialize the client with your API key. You can do this in two ways:
+
+```ruby
+# Method 1: Using a block (recommended)
+skinbaron = SkinbaronApiClient::Client.new do |client|
+  client.api_key = "your_api_key"
+  client.log_path = "path/to/logs"           # Optional
+  client.request_log_path = "requests.log"   # Optional
+  client.error_log_path = "errors.log"       # Optional
+  client.appid = 730                         # Optional - defaults to CS2
+end
+
+# Method 2: Using keyword arguments
+skinbaron = SkinbaronApiClient::Client.new(
+  api_key: "your_api_key",
+  log_path: "path/to/logs",          # Optional: Base path for logs
+  request_log_path: "requests.log",  # Optional: Specific path for request logs
+  error_log_path: "errors.log",      # Optional: Specific path for error logs
+  appid: 730                         # Optional: appid - already set to CS2 by default
+)
+```
+
+### Search Items
+
+Search for items on the SkinBaron marketplace:
+
+```ruby
+# Search for a specific item
+response = skinbaron.search(item: "AK-47 | Redline")
+```
+
+### Error Handling
+
+The client includes built-in error handling for various scenarios:
+
+- `SkinbaronApiClient::AuthenticationError` - API authentication failures
+- `SkinbaronApiClient::RequestError` - HTTP request failures
+- `SkinbaronApiClient::ResponseError` - Invalid response handling
+- `SkinbaronApiClient::Error` - General errors
+
+### Logging
+
+The client automatically logs:
+
+- API requests and responses
+- Request duration timing
+- Errors with stack traces
+- Debug information
+
+Logs can be configured during client initialization using:
+
+- `log_path` - Base directory for all logs
+- `request_log_path` - Specific file for request logs
+- `error_log_path` - Specific file for error logs
+
+## Requirements
+
+- Ruby >= 3.0.0
+- HTTP gem ~> 5.2
 
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`.
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/skinbaron_api_client.
+1. Fork it
+2. Create your feature branch (`git checkout -b feature/my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin feature/my-new-feature`)
+5. Create a new Pull Request
+
+Bug reports and pull requests are welcome on GitHub at <https://github.com/shazam442/skinbaron-api-client>.
 
 ## License
 

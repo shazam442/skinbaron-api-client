@@ -21,11 +21,24 @@ module SkinbaronApiClient
   class Client
     include ErrorHandling
 
+    attr_accessor :api_key, :appid, :log_path, :request_log_path, :error_log_path
+
     BASE_URL = "https://api.skinbaron.de"
 
-    def initialize(api_key:, appid: 730)
-      @api_key = api_key
-      @appid = appid
+    def initialize(api_key: nil, appid: 730, log_path: nil, request_log_path: nil, error_log_path: nil)
+      if block_given?
+        yield self
+        validate_required_attributes
+      else
+        @api_key = api_key
+        @appid = appid
+        @log_path = log_path
+        @request_log_path = request_log_path
+        @error_log_path = error_log_path
+        validate_required_attributes
+      end
+
+      configure_logger(@log_path, @request_log_path, @error_log_path)
     end
 
     def search(item:)
@@ -35,6 +48,10 @@ module SkinbaronApiClient
     end
 
     private
+
+    def validate_required_attributes
+      raise ArgumentError, "api_key is required" unless @api_key
+    end
 
     def post(endpoint:, headers: {}, body: {})
       request_url = "#{BASE_URL}/#{endpoint}"
@@ -90,6 +107,14 @@ module SkinbaronApiClient
       response = HTTP.headers(headers).post(url, json: body)
       log_request_complete(response: response, duration: Time.now - start_time)
       response
+    end
+
+    def configure_logger(log_path, request_log_path, error_log_path)
+      SkinbaronApiClient::Logger.configure(
+        base_path: log_path,
+        request_log_path: request_log_path,
+        error_log_path: error_log_path
+      )
     end
   end
 end

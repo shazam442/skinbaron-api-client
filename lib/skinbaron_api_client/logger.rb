@@ -2,6 +2,8 @@
 
 require "logger"
 require "singleton"
+require "fileutils"
+require "json"
 
 module SkinbaronApiClient
   class Logger
@@ -11,10 +13,24 @@ module SkinbaronApiClient
 
     attr_reader :logs, :request_logs
 
+    class << self
+      def configure(base_path: nil, request_log_path: nil, error_log_path: nil)
+        instance.configure(base_path, request_log_path, error_log_path)
+      end
+    end
+
     def initialize
       reset!
       @logger = ::Logger.new($stdout)
-      @logger.level = ::Logger::INFO # Default level
+      @logger.level = ::Logger::INFO
+    end
+
+    def configure(base_path, request_log_path, error_log_path)
+      @base_path = base_path
+      @request_log_path = request_log_path || File.join(base_path, "requests.log") if base_path || request_log_path
+      @error_log_path = error_log_path || File.join(base_path, "errors.log") if base_path || error_log_path
+
+      setup_loggers
     end
 
     def reset!
@@ -23,7 +39,7 @@ module SkinbaronApiClient
     end
 
     def log_request(request_data)
-      @request_logs << {
+      entry = {
         timestamp: Time.now,
         url: request_data[:url],
         method: request_data[:method],
@@ -33,6 +49,9 @@ module SkinbaronApiClient
         status: request_data[:status],
         duration: request_data[:duration]
       }
+
+      @request_logs << entry
+      write_to_log(@request_logger, entry) if @request_logger
     end
 
     LEVELS.each do |level|
@@ -46,11 +65,24 @@ module SkinbaronApiClient
 
         @logs << entry
         @logger.send(level, message)
+        write_to_log(@error_logger, entry) if @error_logger && level == :error
       end
     end
 
-    def set_level(level)
-      @logger.level = ::Logger.const_get(level.to_s.upcase)
+    private
+
+    def setup_loggers
+      @request_logger = setup_file_logger(@request_log_path) if @request_log_path
+      @error_logger = setup_file_logger(@error_log_path) if @error_log_path
+    end
+
+    def setup_file_logger(path)
+      FileUtils.mkdir_p(File.dirname(path))
+      ::Logger.new(path, "daily")
+    end
+
+    def write_to_log(logger, entry)
+      logger.info(JSON.pretty_generate(entry))
     end
   end
 end

@@ -30,21 +30,21 @@ module SkinbaronApiClient
     private
 
     def check_response(response)
-      if response.body.to_s.include? "wrong or unauthenticated request"
-        logger.error("Authentication failed", { body: response.body })
-        raise AuthenticationError, "Authentication failed: #{response.body}"
+      if response[:body].to_s.include? "wrong or unauthenticated request"
+        logger.error("Authentication failed", { body: response[:body] })
+        raise AuthenticationError, "Authentication failed: #{response[:body]}"
       end
 
-      return if response&.status&.success?
+      return if response[:status]&.success?
 
       logger.error("Request failed", {
-                     uri: response.request.uri,
-                     status: response.status,
-                     body: response.body
+                     uri: response[:url],
+                     status: response[:status],
+                     body: response[:body]
                    })
 
       raise ResponseError,
-            "Request to \"#{response.request.uri}\" failed with status #{response.status}. Response: #{response.body}"
+            "Request failed with status #{response[:status]}. Response: #{response[:body]}"
     end
   end
 end

@@ -1,0 +1,26 @@
+{
+  "sales": [
+    {
+      "id": "502b290d-ebd2-48bd-81ab-6ecbb59345a0",
+      "price": 26.23,
+      "img": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5lpKKqPrxN7LEmyVS7cYg3LuT94qm21GyqUpsa2j7IIDDJwI7YwvRrFi7lOa5hpfpvs_A1zI97fpmYHCU",
+      "market_name": "AK-47 | Redline (Field-Tested)",
+      "sbinspect": "https://skinbaron.de/offers/show?offerUuid=502b290d-ebd2-48bd-81ab-6ecbb59345a0&productName=AK-47+%7C+Redline",
+      "inspect": "steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561199129022168A41020452662D7507057255090367927",
+      "stickers": "GamerLegion (Holo) | Copenhagen 2024, GamerLegion (Holo) | Copenhagen 2024, GamerLegion (Holo) | Copenhagen 2024, GamerLegion (Holo) | Copenhagen 2024",
+      "wear": 0.34289545,
+      "appid": 730
+    },
+    {
+      "id": "e6f0ee4c-465f-4791-9d74-e4a76f8552a0",
+      "price": 124.34,
+      "img": "https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXH5ApeO4YmlhxYQknCRvCo04DEVlxkKgpot7HxfDhjxszJemkV09-5lpKKqPv9NLPF2DIA6cAn3uuZ8dj231e380VtYm70d4-UJlU-ZgmC81W6kObmgJ--7ZvXiSw0hXLDIUU",
+      "market_name": "AK-47 | Redline (Minimal Wear)",
+      "sbinspect": "https://skinbaron.de/offers/show?offerUuid=e6f0ee4c-465f-4791-9d74-e4a76f8552a0&productName=AK-47+%7C+Redline",
+      "inspect": "steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20S76561199216000601A27161448065D14007497127387744157",
+      "stickers": "Fearsome (Holo)",
+      "wear": 0.14794262,
+      "appid": 730
+    }
+  ]
+}

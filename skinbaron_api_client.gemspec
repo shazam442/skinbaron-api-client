@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name = "skinbaron_api_client"
   spec.version = SkinbaronApiClient::VERSION
   spec.authors = ["Sam Schams"]
-  spec.email = ["TODO: Write your email address"]
+  spec.email = ["94133186+shazam442@users.noreply.github.com"]
 
   spec.summary = "A simple ruby client for interacting with the SkinBaron API " \
                  "simplifying the access to item data and market data."
@@ -17,15 +17,15 @@ Gem::Specification.new do |spec|
                     "Provides basic functionality for searching CS2 (formerly CS:GO) items " \
                     "on the SkinBaron marketplace. Includes error handling, request logging, " \
                     "and a straightforward API design for interacting with SkinBaron's marketplace data."
-  spec.homepage = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage = "https://github.com/shazam442/skinbaron-api-client"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
-  spec.metadata["source_code_uri"] = "TODO: Put your gem's public repo URL here."
-  spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
+  spec.metadata["source_code_uri"] = "https://github.com/shazam442/skinbaron-api-client"
+  spec.metadata["changelog_uri"] = "https://github.com/shazam442/skinbaron-api-client/blob/main/CHANGELOG.md"
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.

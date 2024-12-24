@@ -10,10 +10,13 @@ Gem::Specification.new do |spec|
   spec.authors = ["Sam Schams"]
   spec.email = ["TODO: Write your email address"]
 
-  spec.summary = "A lightweight ruby client for interacting with the SkinBaron API. " \
-                 "Simplifying the access to item and market data."
+  spec.summary = "A simple ruby client for interacting with the SkinBaron API " \
+                 "simplifying the access to item data and market data."
 
-  spec.description = "TODO: Write a longer description or delete this line."
+  spec.description = "A Ruby client library for the SkinBaron API - my first Ruby gem. " \
+                    "Provides basic functionality for searching CS2 (formerly CS:GO) items " \
+                    "on the SkinBaron marketplace. Includes error handling, request logging, " \
+                    "and a straightforward API design for interacting with SkinBaron's marketplace data."
   spec.homepage = "TODO: Put your gem's website or public repo URL here."
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"

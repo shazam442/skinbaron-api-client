@@ -2,7 +2,8 @@
 
 # frozen_string_literal: true
 
-require_relative "error_handler"
+require_relative "logger"
+require_relative "error_handling"
 
 module SkinbaronApiClient
   # Example usage:
@@ -13,12 +14,13 @@ module SkinbaronApiClient
   # Methods:
   # - initialize(api_key:, appid: 730): Initializes the client with the given API key and app ID.
   # - search(item:): Searches for an item on Skinbaron and returns the response.
-  # - write_to_file(data): Writes the given data to a JSON file.
   #
   # Private Methods:
   # - base_body: Returns the base request body with the API key and app ID.
   # - base_headers: Returns the base request headers.
   class Client
+    include ErrorHandling
+
     BASE_URL = "https://api.skinbaron.de"
 
     def initialize(api_key:, appid: 730)
@@ -28,7 +30,6 @@ module SkinbaronApiClient
 
     def search(item:)
       body = { "search_item": item }
-
       response = post(endpoint: "Search", body: body)
       JSON.parse(response.body.to_s)
     end
@@ -40,13 +41,10 @@ module SkinbaronApiClient
       request_headers = base_headers.merge(headers)
       request_body = base_body.merge(body)
 
-      response = HTTP.headers(request_headers).post(request_url, json: request_body)
-      ErrorHandler.check_response(response)
-
-      response
-    rescue StandardError => e
-      ErrorHandler.print_error(e, response || nil)
+      log_request_start(url: request_url, headers: request_headers, body: request_body)
+      make_timed_request(headers: request_headers, url: request_url, body: request_body)
     end
+    with_error_handling :post
 
     def base_body
       {
@@ -61,6 +59,37 @@ module SkinbaronApiClient
         "Accept" => "application/json",
         "X-Requested-With" => "XMLHttpRequest"
       }
+    end
+
+    def logger
+      SkinbaronApiClient::Logger.instance
+    end
+
+    def log_request_start(url:, headers:, body:)
+      logger.debug("Making POST request", { url: url, headers: headers, body: body })
+    end
+
+    def log_request_complete(response:, duration:)
+      logger.log_request({
+                           url: response.request.uri,
+                           method: :post,
+                           headers: response.headers.to_h,
+                           body: response.body.to_s,
+                           response: response&.body,
+                           status: response&.status,
+                           duration: duration
+                         })
+    end
+
+    def log_error(message:, error:)
+      logger.error(message, { error: error.message, backtrace: error.backtrace })
+    end
+
+    def make_timed_request(headers:, url:, body:)
+      start_time = Time.now
+      response = HTTP.headers(headers).post(url, json: body)
+      log_request_complete(response: response, duration: Time.now - start_time)
+      response
     end
   end
 end

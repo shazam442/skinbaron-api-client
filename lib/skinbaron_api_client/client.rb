@@ -12,8 +12,6 @@ module SkinbaronApiClient
   class Client
     include ErrorHandling
 
-    BASE_URL = "https://api.skinbaron.de"
-
     attr_reader :config, :http_client, :search_endpoint
 
     def initialize(**options)
@@ -23,7 +21,7 @@ module SkinbaronApiClient
       config.validate!                            # Validates required attributes
 
       @http_client = HttpClient.new(
-        base_url: BASE_URL,
+        base_url: config.base_url,
         headers: config.base_headers,
         debug: config.debug
       )
@@ -41,16 +39,6 @@ module SkinbaronApiClient
     def search(item:)
       @search_endpoint.call(item: item)
     end
-
-    # decorated :with_error_handling
-    def post(endpoint:, body: {})
-      response = http_client.post(
-        endpoint: endpoint,
-        body: config.base_body.merge(body)
-      )
-      check_and_return_response(response)
-    end
-    with_error_handling :post
 
     private
 

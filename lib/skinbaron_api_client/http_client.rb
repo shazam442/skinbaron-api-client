@@ -3,6 +3,8 @@ require "json"
 
 module SkinbaronApiClient
   class HttpClient
+    include ErrorHandling
+
     attr_reader :base_url, :headers, :debug
 
     def initialize(base_url:, headers: {}, debug: false)
@@ -11,7 +13,7 @@ module SkinbaronApiClient
       @debug = debug
     end
 
-    def post(endpoint:, body: {})
+    with_error_handling def post(endpoint:, body: {})
       url = "#{base_url}/#{endpoint}"
       debug_log "Making POST request to: #{url}"
       debug_log "Request body: #{body.to_json}"
@@ -25,7 +27,7 @@ module SkinbaronApiClient
       debug_log "Response status: #{response[:status]}"
       debug_log "Response body: #{response[:body]}"
 
-      response
+      check_and_return_response(response)
     end
 
     private

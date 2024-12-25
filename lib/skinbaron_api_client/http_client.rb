@@ -1,7 +1,10 @@
 require "http"
 require "json"
+require_relative "error_handling"
+require_relative "logger"
 
 module SkinbaronApiClient
+  # HTTP client for making requests to the Skinbaron API
   class HttpClient
     include ErrorHandling
 
@@ -21,29 +24,28 @@ module SkinbaronApiClient
       start_time = Time.now
       http_response = HTTP.headers(headers).post(url, json: body)
 
-      response = build_response(http_response, url)
-      response.merge!(duration: Time.now - start_time)
+      response = {
+        status: http_response.status,
+        headers: http_response.headers.to_h,
+        body: http_response.body.to_s,
+        url: url
+      }
 
-      debug_log "Response status: #{response[:status]}"
-      debug_log "Response body: #{response[:body]}"
-
-      check_and_return_response(response)
+      log_request_response(response, url, Time.now - start_time)
+      response
     end
 
     private
 
-    def build_response(http_response, url)
-      {
-        status: http_response.status,
-        headers: http_response.headers.to_h,
-        body: http_response.body.to_s,
-        url: url,
-        parsed_body: parse_body(http_response)
-      }
-    end
-
-    def parse_body(response)
-      JSON.parse(response.body.to_s) if response.status.success?
+    def log_request_response(response, url, duration)
+      SkinbaronApiClient::Logger.instance.log_request({
+                                                        url: url,
+                                                        method: "POST",
+                                                        headers: headers,
+                                                        body: response[:body],
+                                                        status: response[:status],
+                                                        duration: duration
+                                                      })
     end
 
     def debug_log(message)

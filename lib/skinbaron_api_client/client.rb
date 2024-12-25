@@ -16,16 +16,11 @@ module SkinbaronApiClient
 
     def initialize(**options)
       @config = Configuration.new
-      configure(**options) unless options.empty?  # Apply options first as base configuration
-      yield @config if block_given?               # Allow block to override options if needed
-      config.validate!                            # Validates required attributes
+      configure(**options) unless options.empty?
+      yield @config if block_given?
+      config.validate!
 
-      @http_client = HttpClient.new(
-        base_url: config.base_url,
-        headers: config.base_headers,
-        debug: config.debug
-      )
-
+      @http_client = setup_http_client
       setup_endpoints
       setup_logger
     end
@@ -41,6 +36,14 @@ module SkinbaronApiClient
     end
 
     private
+
+    def setup_http_client
+      HttpClient.new(
+        base_url: config.base_url,
+        headers: config.base_headers,
+        debug: config.debug
+      )
+    end
 
     def setup_endpoints
       @search_endpoint = Endpoints::Search.new(self)

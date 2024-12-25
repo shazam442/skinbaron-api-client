@@ -10,7 +10,13 @@ module SkinbaronApiClient
       def call(item:)
         body = { "search_item": item }
         response = @skinbaron_client.http_client.post(endpoint: "Search", body: body)
-        response[:parsed_body]
+
+        return nil unless response[:status].success?
+
+        JSON.parse(response[:body])
+      rescue JSON::ParserError => e
+        logger.error("Failed to parse search response", error: e.message)
+        nil
       end
     end
   end

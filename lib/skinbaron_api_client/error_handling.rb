@@ -19,38 +19,49 @@ module SkinbaronApiClient
 
         define_method(method_name) do |*args, **kwargs|
           response = original_method.bind(self).call(*args, **kwargs)
-          check_and_return_response(response)
+
+          check_response_success(response)
+          check_response_authentication(response)
+
+          response
         rescue HTTP::Error => e
           log_error(message: "HTTP request failed", error: e)
           raise RequestError, "HTTP request failed: #{e.message}"
         rescue JSON::ParserError => e
           log_error(message: "JSON parsing failed", error: e)
           raise ResponseError, "Invalid JSON response: #{e.message}"
-        rescue StandardError => e
-          log_error(message: "Unexpected error", error: e)
-          raise Error, "Unexpected error: #{e.message}"
         end
       end
     end
 
     private
 
-    def check_and_return_response(response)
-      if response[:body].to_s.include? "wrong or unauthenticated request"
-        logger.error("Authentication failed", { body: response[:body] })
-        raise AuthenticationError, "Authentication failed: #{response[:body]}"
-      end
+    def logger
+      SkinbaronApiClient::Logger.instance
+    end
 
-      return response if response[:status]&.success?
+    def log_error(message:, error:)
+      logger.error(
+        message,
+        {
+          error_class: error.class.name,
+          error_message: error.message,
+          backtrace: error.backtrace&.first(5)
+        }
+      )
+    end
 
-      logger.error("Request failed", {
-                     uri: response[:url],
-                     status: response[:status],
-                     body: response[:body]
-                   })
+    def check_response_success(response)
+      return if response[:status]&.success?
 
-      raise ResponseError,
-            "Request failed with status #{response[:status]}. Response: #{response[:body]}"
+      raise ResponseError, "Request failed with status #{response[:status]}. Response: #{response[:body]}"
+    end
+
+    def check_response_authentication(response)
+      return unless response[:body].to_s.include? "wrong or unauthenticated request"
+
+      logger.error("Authentication failed", { body: response[:body] })
+      raise AuthenticationError, "Authentication failed: #{response[:body]}"
     end
   end
 end

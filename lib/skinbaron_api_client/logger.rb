@@ -27,10 +27,10 @@ module SkinbaronApiClient
 
     def configure(base_path, request_log_path, error_log_path)
       @base_path = base_path
-      @request_log_path = request_log_path || File.join(base_path, "requests.log") if base_path || request_log_path
-      @error_log_path = error_log_path || File.join(base_path, "errors.log") if base_path || error_log_path
+      @request_log_path = request_log_path
+      @error_log_path = error_log_path
 
-      setup_loggers
+      setup_loggers if should_setup_loggers?
     end
 
     def reset!
@@ -71,9 +71,20 @@ module SkinbaronApiClient
 
     private
 
+    def should_setup_loggers?
+      @base_path || @request_log_path || @error_log_path
+    end
+
     def setup_loggers
-      @request_logger = setup_file_logger(@request_log_path) if @request_log_path
-      @error_logger = setup_file_logger(@error_log_path) if @error_log_path
+      if @request_log_path || (@base_path && !@request_log_path)
+        path = @request_log_path || File.join(@base_path, "requests.log")
+        @request_logger = setup_file_logger(path)
+      end
+
+      return unless @error_log_path || (@base_path && !@error_log_path)
+
+      path = @error_log_path || File.join(@base_path, "errors.log")
+      @error_logger = setup_file_logger(path)
     end
 
     def setup_file_logger(path)

@@ -52,18 +52,20 @@ require 'skinbaron_api_client'
 Initialize the client with your API key. You can do this in two ways:
 
 ```ruby
-# Method 1: Using a block (recommended)
+# Method 1: Using a block
 skinbaron = SkinbaronApiClient::Client.new do |client|
   client.api_key = "your_api_key"
-  client.log_path = "path/to/logs"           # Optional
-  client.request_log_path = "requests.log"   # Optional
-  client.error_log_path = "errors.log"       # Optional
+
+  client.log_path = "path/to/logs"           # Optional: Path to store ALL logs (2 log files)
+  client.request_log_path = "requests.log"   # Optional: Use instead of log_path
+  client.error_log_path = "errors.log"       # Optional: Use instead of log_path
   client.appid = 730                         # Optional - defaults to CS2
 end
 
 # Method 2: Using keyword arguments
 skinbaron = SkinbaronApiClient::Client.new(
   api_key: "your_api_key",
+
   log_path: "path/to/logs",          # Optional: Base path for logs
   request_log_path: "requests.log",  # Optional: Specific path for request logs
   error_log_path: "errors.log",      # Optional: Specific path for error logs
@@ -82,7 +84,7 @@ response = skinbaron.search(item: "AK-47 | Redline")
 
 ### Error Handling
 
-The client includes built-in error handling for various scenarios:
+The client includes error handling with the following errors:
 
 - `SkinbaronApiClient::AuthenticationError` - API authentication failures
 - `SkinbaronApiClient::RequestError` - HTTP request failures
@@ -91,12 +93,10 @@ The client includes built-in error handling for various scenarios:
 
 ### Logging
 
-The client automatically logs:
+The client logs:
 
 - API requests and responses
-- Request duration timing
-- Errors with stack traces
-- Debug information
+- Errors
 
 Logs can be configured during client initialization using:
 
@@ -107,11 +107,10 @@ Logs can be configured during client initialization using:
 ## Requirements
 
 - Ruby >= 3.0.0
-- HTTP gem ~> 5.2
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`.
 

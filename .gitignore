@@ -11,3 +11,4 @@ dev_script.rb
 .byebug_history
 logs/requests.log
 logs/errors.log
+*.gem

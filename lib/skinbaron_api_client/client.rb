@@ -18,8 +18,9 @@ module SkinbaronApiClient
 
     def initialize(**options)
       @config = Configuration.new
-      yield @config if block_given?
-      configure(**options) unless options.empty?
+      configure(**options) unless options.empty?  # Apply options first as base configuration
+      yield @config if block_given?               # Allow block to override options if needed
+      config.validate!                            # Validates required attributes
 
       @http_client = HttpClient.new(
         base_url: BASE_URL,
@@ -35,19 +36,21 @@ module SkinbaronApiClient
       options.each do |key, value|
         config.public_send("#{key}=", value)
       end
-      config.validate!
     end
 
     def search(item:)
       @search_endpoint.call(item: item)
     end
 
-    with_error_handling def post(endpoint:, body: {})
-      body = config.base_body.merge(body)
-      response = http_client.post(endpoint: endpoint, body: body)
-      check_response(response)
-      response
+    # decorated :with_error_handling
+    def post(endpoint:, body: {})
+      response = http_client.post(
+        endpoint: endpoint,
+        body: config.base_body.merge(body)
+      )
+      check_and_return_response(response)
     end
+    with_error_handling :post
 
     private
 

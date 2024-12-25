@@ -38,20 +38,21 @@ module SkinbaronApiClient
       @request_logs = []
     end
 
-    def log_request(request_data)
-      entry = {
-        timestamp: Time.now,
-        url: request_data[:url],
-        method: request_data[:method],
-        headers: request_data[:headers],
-        body: request_data[:body],
-        response: request_data[:response]&.to_h,
-        status: request_data[:status],
-        duration: request_data[:duration]
-      }
+    def log(request_data)
+      log_data = request_data.merge(timestamp: Time.now)
+      @request_logs << log_data
 
-      @request_logs << entry
-      write_to_log(@request_logger, entry) if @request_logger
+      return unless @request_logger
+
+      case log_data[:type]
+      when "REQUEST"
+        @request_logger.info("\n\n#{"=" * 80}")
+        @request_logger.info(JSON.pretty_generate(log_data))
+      when "RESPONSE"
+        @request_logger.info("\n#{"-" * 80}")
+        @request_logger.info(JSON.pretty_generate(log_data))
+        @request_logger.info("#{"=" * 80}\n")
+      end
     end
 
     LEVELS.each do |level|

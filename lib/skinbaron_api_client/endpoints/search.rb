@@ -8,7 +8,7 @@ module SkinbaronApiClient
       end
 
       def call(item:)
-        body = { "search_item": item }
+        body = @skinbaron_client.config.base_body.merge({ "search_item": item })
         response = @skinbaron_client.http_client.post(endpoint: "Search", body: body)
 
         return nil unless response[:status].success?

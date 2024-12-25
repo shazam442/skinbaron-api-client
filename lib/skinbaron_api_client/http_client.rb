@@ -21,32 +21,32 @@ module SkinbaronApiClient
       debug_log "Making POST request to: #{url}"
       debug_log "Request body: #{body.to_json}"
 
-      start_time = Time.now
+      Logger.instance.log({
+                            type: "REQUEST",
+                            url: url,
+                            method: "POST",
+                            headers: headers,
+                            body: body
+                          })
+
       http_response = HTTP.headers(headers).post(url, json: body)
 
-      response = {
+      Logger.instance.log({
+                            type: "RESPONSE",
+                            url: url,
+                            status: http_response.status.to_s,
+                            body: http_response.body.to_s
+                          })
+
+      {
         status: http_response.status,
         headers: http_response.headers.to_h,
         body: http_response.body.to_s,
         url: url
       }
-
-      log_request_response(response, url, Time.now - start_time)
-      response
     end
 
     private
-
-    def log_request_response(response, url, duration)
-      SkinbaronApiClient::Logger.instance.log_request({
-                                                        url: url,
-                                                        method: "POST",
-                                                        headers: headers,
-                                                        body: response[:body],
-                                                        status: response[:status],
-                                                        duration: duration
-                                                      })
-    end
 
     def debug_log(message)
       puts message if debug

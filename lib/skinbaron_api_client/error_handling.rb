@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# Provides error handling functionality for API requests.
-# Includes methods for checking responses, logging errors,
-# and wrapping methods with standardized error handling.
 module SkinbaronApiClient
   # Mixin for adding error handling capabilities to API client classes.
   # Provides methods for response validation and error logging.

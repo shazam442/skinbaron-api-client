@@ -35,7 +35,7 @@ module SkinbaronApiClient
                             type: "RESPONSE",
                             url: url,
                             status: http_response.status.to_s,
-                            body: http_response.body.to_s
+                            body: http_response
                           })
 
       {

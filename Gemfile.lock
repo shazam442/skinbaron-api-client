@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    skinbaron_api_client (0.1.0)
+    skinbaron_api_client (0.2.0)
       http (~> 5.2)
       logger (~> 1.6, >= 1.6.4)
 

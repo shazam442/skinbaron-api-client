@@ -31,8 +31,9 @@ module SkinbaronApiClient
       end
     end
 
-    def search(item:)
-      @search_endpoint.call(item: item)
+    def search(items:, **options)
+      items = Array(items)
+      @search_endpoint.call(items: items, **options) || []
     end
 
     private
@@ -46,7 +47,7 @@ module SkinbaronApiClient
     end
 
     def setup_endpoints
-      @search_endpoint = Endpoints::Search.new(self)
+      @search_endpoint = Endpoints::Search.new(self, @config)
     end
 
     def setup_logger

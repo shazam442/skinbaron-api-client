@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2024-12-29
+
+- Fixed typo in `minWear` and `maxWear`
+
 ## [0.2.0] - 2024-12-26
 
 - Added support for querying multiple items in one request

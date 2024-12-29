@@ -7,7 +7,6 @@ require "json"
 require_relative "skinbaron_api_client/version"
 require_relative "skinbaron_api_client/client"
 require_relative "skinbaron_api_client/logger"
-require_relative "skinbaron_api_client/error_handling"
 
 # Example usage:
 #

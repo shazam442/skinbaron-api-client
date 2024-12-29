@@ -1,13 +1,10 @@
 require "http"
 require "json"
-require_relative "error_handling"
 require_relative "logger"
 
 module SkinbaronApiClient
   # HTTP client for making requests to the Skinbaron API
   class HttpClient
-    include ErrorHandling
-
     attr_reader :base_url, :headers, :debug
 
     def initialize(base_url:, headers: {}, debug: false)
@@ -16,7 +13,7 @@ module SkinbaronApiClient
       @debug = debug
     end
 
-    with_error_handling def post(endpoint:, body: {})
+    def post(endpoint:, body: {})
       url = "#{base_url}/#{endpoint}"
       debug_log "Making POST request to: #{url}"
       debug_log "Request body: #{body.to_json}"
@@ -30,6 +27,7 @@ module SkinbaronApiClient
                           })
 
       http_response = HTTP.headers(headers).post(url, json: body)
+      raise AuthenticationError, "Authentication failed" if http_response.body.to_s.include? "wrong or unauthenticated"
 
       Logger.instance.log({
                             type: "RESPONSE",

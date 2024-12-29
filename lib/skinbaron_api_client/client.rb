@@ -4,14 +4,11 @@
 
 require_relative "configuration"
 require_relative "http_client"
-require_relative "error_handling"
 require_relative "logger"
 require_relative "endpoints/search"
 
 module SkinbaronApiClient
   class Client
-    include ErrorHandling
-
     attr_reader :config, :http_client, :search_endpoint
 
     def initialize(**options)

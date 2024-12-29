@@ -54,9 +54,6 @@ module SkinbaronApiClient
         @request_logger.info(JSON.pretty_generate(log_data))
         @request_logger.info("#{"=" * 80}\n")
       end
-    rescue JSON::ParserError => e
-      @logger.error("LOGGER: failed to parse search response", error: e.message)
-      @logger.error("LOGGER: Response: #{JSON.pretty_generate(log_data)}")
     end
 
     LEVELS.each do |level|

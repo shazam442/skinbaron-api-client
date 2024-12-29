@@ -75,8 +75,8 @@ module SkinbaronApiClient
                         }).tap do |body|
           body["min"] = options[:min_price] if options.key?(:min_price)
           body["max"] = options[:max_price] if options.key?(:max_price)
-          body["minwear"] = options[:min_wear] if options.key?(:min_wear)
-          body["maxwear"] = options[:max_wear] if options.key?(:max_wear)
+          body["minWear"] = options[:min_wear] if options.key?(:min_wear)
+          body["maxWear"] = options[:max_wear] if options.key?(:max_wear)
           body["stattrak"] = options[:stattrak] if options.key?(:stattrak)
           body["souvenir"] = options[:souvenir] if options.key?(:souvenir)
           body["stackable"] = options[:stackable] if options.key?(:stackable)

@@ -27,9 +27,10 @@ module SkinbaronApiClient
           enforce_request_delay(delay_seconds: options[:request_delay] || DEFAULT_REQUEST_DELAY)
           body["after_saleid"] = last_saleid if last_saleid
 
-          puts "REQUEST IS BEING MADE" if @config.debug
           response = @skinbaron_client.http_client.post(endpoint: "Search", body: body)
           @last_request_time = Time.now
+
+          raise TooManyRequestsError, "Too many requests" if response[:status] == 429
 
           response_body = JSON.parse(response[:body])
           current_page_listings = response_body["sales"]

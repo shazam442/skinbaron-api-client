@@ -16,11 +16,4 @@ require_relative "skinbaron_api_client/logger"
 # response = skinbaron.search(item: "AK-47 | Asiimov")
 #
 module SkinbaronApiClient
-  class Error < StandardError; end
-
-  class AuthenticationError < Error; end
-
-  class RequestError < Error; end
-
-  class ResponseError < Error; end
 end
